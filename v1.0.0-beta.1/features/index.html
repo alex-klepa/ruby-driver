@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="A pure Ruby client for Apache Cassandra">
+    <meta name="author" content="DataStax">
+
+    <title>Ruby Driver for Apache Cassandra - Usage</title>
+
+    <link rel="icon" href="../../favicon.ico">
+    <link rel="apple-touch-icon" href="../../favicon.png">
+    <link href="../../css/style.css" rel="stylesheet">
+    <link href="../../css/pygments.css" rel="stylesheet">
+    <link href="../../css/hotkeys.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body ng-app="docs" data-spy="scroll" data-target="#table-of-contents" data-offset="69">
+    <header class="container-fluid navbar">
+      <div class="row">
+        <div class="col-sm-4">
+          <a class="navbar-brand" href="../"><img alt="Brand" src="../../img/logo.png">Ruby Driver for Apache Cassandra</a>
+        </div>
+        <div class="col-md-4 col-md-offset-4">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="list-inline" role="nav">
+                <li><a href="https://academy.datastax.com/" class="navbar-link">DataStax Academy</a></li>
+                <li><a href="http://www.datastax.com/dev/blog" class="navbar-link">Tech Blog</a></li>
+                <li><a href="http://www.datastax.com/what-we-offer/products-services/support" class="navbar-link">Support</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <form id="search" class="form-search dropdown visible-lg-block" ng-controller="search" ng-class="{open: hasResults}" role="search" ng-submit="submit()" data-spy="affix" data-offset-top="130">
+                <div class="form-group has-feedback">
+                  <input type="search" class="form-control input-sm mousetrap" placeholder="Search..." ng-model="q" ng-change="search('v1.0.0-beta.1')" ng-disabled="!searchReady" disabled data-hotkey="{down: moveDown, up: moveUp, esc: reset}" data-search>
+                </div>
+                <ul class="dropdown-menu search-results" role="menu">
+                  <li ng-repeat="result in results" ng-class="{'bg-warning': $index == current}"><a ng-href="{{basePath}}{{result.path}}"><span ng-bind-html="summary(result)"></span></a></li>
+                </ul>
+              </form>
+            </div>
+            <div class="col-md-4">
+              <a href="http://www.datastax.com/download" class="btn btn-primary btn-sm">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row crumbs-wrapper">
+        <div class="col-md-12">
+          <nav id="crumbs" data-spy="affix" data-offset-top="130">
+            <ol class="breadcrumb">
+              
+              <li>
+                <div class="btn-group">
+                  <button id="current-version" class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    v1.0.0-beta.1
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="current-version">
+                  
+                    <li><a href="../../features/">v2.1.5</a></li>
+                  
+                    <li><a href="../../v2.0.1/features/">v2.0.1</a></li>
+                  
+                    <li><a href="../../v1.2.0/features/">v1.2.0</a></li>
+                  
+                    <li><a href="../../v1.1.1/features/">v1.1.1</a></li>
+                  
+                    <li><a href="../../v1.0.0/features/">v1.0.0</a></li>
+                  
+                    <li><a href="../../v1.0.0-rc.1/features/">v1.0.0-rc.1</a></li>
+                  
+                    <li><a href="../../v1.0.0-beta.3/features/">v1.0.0-beta.3</a></li>
+                  
+                    <li><a href="../../v1.0.0-beta.2/features/">v1.0.0-beta.2</a></li>
+                  
+                    <li class="disabled"><a href="./">v1.0.0-beta.1</a></li>
+                  
+                  </ul>
+                </div>
+              </li>
+              
+              
+              
+              
+              <li><a href="../">Datastax Ruby Driver for Apache Cassandra</a></li>
+              
+              
+              
+              
+              
+              <li class="active">Usage</li>
+              <li class="dropdown" id="table-of-contents">
+                <div class="btn-group">
+                  <button id="current-section" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                    Jump to&#8230; <span class="caret"></span><span class="sr-only">Table of Contents</span>
+                  </button>
+                  <ul class="dropdown-menu nav nav-pills nav-stacked">
+                    <li><a href="#usage">Page Top <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></a></li>
+<li><a href="#connecting-and-discovering-nodes">Connecting and Discovering Nodes
+</a></li>
+<li><a href="#executing-queries">Executing Queries
+</a></li>
+<li><a href="#parameterized-queries">Parameterized queries
+</a></li>
+<li><a href="#executing-statements-in-parallel">Executing Statements in Parallel
+</a></li>
+<li><a href="#prepared-statements">Prepared Statements
+</a></li>
+<li><a href="#changing-keyspaces">Changing keyspaces
+</a></li>
+<li><a href="#creating-keyspaces-and-tables">Creating keyspaces and tables
+</a></li>
+<li><a href="#batching">Batching
+</a></li>
+<li><a href="#paging">Paging
+</a></li>
+<li><a href="#consistency">Consistency
+</a></li>
+<li><a href="#compression">Compression
+</a></li>
+<li><a href="#logging">Logging
+</a></li>
+<li><a href="#thread-safety">Thread safety
+</a></li>
+<li><a href="#cluster">Cluster
+</a></li>
+<li><a href="#session">Session
+</a></li>
+<li><a href="#cql3">CQL3
+</a></li>
+<li><a href="#i-get-connection-refused-errors">I get “connection refused” errors
+</a></li>
+<li><a href="#i-get-deadlock-detected-errors">I get “Deadlock detected” errors
+</a></li>
+<li><a href="#i-get-query-error">I get QueryError
+
+</a></li>
+<li><a href="#i-m-not-getting-all-elements-back-from-my-list-set-map">I’m not getting all elements back from my list/set/map
+</a></li>
+<li><a href="#authentication-doesn-t-work">Authentication doesn’t work
+</a></li>
+<li><a href="#i-get-end-of-file-reached-i-m-connecting-to-port-9160-and-it-doesn-t-work">I get “end of file reached” / I’m connecting to port 9160 and it doesn’t work
+</a></li>
+<li><a href="#something-else-is-not-working">Something else is not working
+</a></li>
+<li><a href="#use-asynchronous-apis">Use asynchronous apis
+</a></li>
+<li><a href="#use-prepared-statements">Use prepared statements
+</a></li>
+<li><a href="#use-j-ruby">Use JRuby
+</a></li>
+<li><a href="#try-batching">Try batching
+</a></li>
+<li><a href="#try-compression">Try compression
+</a></li>
+                  </ul>
+                </div>
+              </li>
+              
+              
+              
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="container-fluid" id="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div id="navigation" class="side-nav" role="tablist" aria-multiselectable="true">
+            <h3>Contents</h3>
+            <ul class="nav nav-pills nav-stacked">
+  
+  
+  
+  <li>
+    <a href="../api/">Cassandra <small>module</small></a>
+  </li>
+  
+  
+  
+  
+  <li class="active">
+    <a href="./" class="current">Usage <small>page</small></a>
+    <ul class="nav nav-pills nav-stacked">
+  
+  
+  
+  <li>
+    <a href="basics/">Basics <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="asynchronous_io/">Asynchronous IO <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="security/">Authentication <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="debugging/">Debugging <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="load_balancing/">Load Balancing <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="retry_policies/">Retry Policies <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="state_listeners/">State Listeners <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="reconnection/">Reconnection <small>page</small></a>
+  </li>
+  
+  
+</ul>
+
+  </li>
+  
+  
+</ul>
+
+          </div>
+        </div>
+        <div class="col-md-9 content">
+          
+
+<h1 id="usage" class="target">Usage<a class="anchor" href="#usage" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h1>
+
+<h2 id="connecting-and-discovering-nodes" class="target">Connecting and Discovering Nodes<a class="anchor" href="#connecting-and-discovering-nodes" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Ruby driver will connect to 127.0.0.1 if no <code>:hosts</code> given to <code>Cassandra.connect</code>. It will automatically discover all peers and add them to cluster metadata.</p>
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'cassandra'</span>
+
+<span class="n">cluster</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span>
+
+<span class="n">cluster</span><span class="p">.</span><span class="nf">each_hosts</span> <span class="k">do</span> <span class="o">|</span><span class="n">host</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="s2">"Host </span><span class="si">#{</span><span class="n">host</span><span class="p">.</span><span class="nf">ip</span><span class="si">}</span><span class="s2">: id=</span><span class="si">#{</span><span class="n">host</span><span class="p">.</span><span class="nf">id</span><span class="si">}</span><span class="s2"> datacenter=</span><span class="si">#{</span><span class="n">host</span><span class="p">.</span><span class="nf">datacenter</span><span class="si">}</span><span class="s2"> rack=</span><span class="si">#{</span><span class="n">host</span><span class="p">.</span><span class="nf">rack</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+</code></pre>
+<p>You can also specify a list of seed nodes to connect to. The set of IP addresses we pass to the <code>Cassandra.connect</code> is simply an initial set of contact points. After the driver connects to one of these nodes, it will automatically discover the rest of the nodes in the cluster, so you don’t need to list every node in your cluster.</p>
+
+<p><a href="../api/#connect-class_method">Read more in the api docs</a></p>
+
+<h2 id="executing-queries" class="target">Executing Queries<a class="anchor" href="#executing-queries" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>You run CQL statements by passing them to <code>Session#execute</code>.</p>
+<pre class="highlight"><code><span class="n">keyspace</span> <span class="o">=</span> <span class="s1">'system'</span>
+<span class="n">session</span>  <span class="o">=</span> <span class="n">cluster</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="n">keyspace</span><span class="p">)</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s1">'SELECT keyspace_name, columnfamily_name FROM schema_columnfamilies'</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="s2">"The keyspace </span><span class="si">#{</span><span class="n">row</span><span class="p">[</span><span class="s1">'keyspace_name'</span><span class="p">]</span><span class="si">}</span><span class="s2"> has a table called </span><span class="si">#{</span><span class="n">row</span><span class="p">[</span><span class="s1">'columnfamily_name'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+</code></pre>
+<p>For queries that will be run repeatedly, <a href="#prepared-statements">you should use Prepared statements</a>.</p>
+
+<p><a href="../api/session/#execute-instance_method">Read more in the api docs</a></p>
+
+<h2 id="parameterized-queries" class="target">Parameterized queries<a class="anchor" href="#parameterized-queries" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If you’re using Cassandra 2.0 or later you no longer have to build CQL strings when you want to insert a value in a query, there’s a new feature that lets you bind values with reqular statements:</p>
+<pre class="highlight"><code><span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s2">"UPDATE users SET age = ? WHERE user_name = ?"</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="s1">'Sam'</span><span class="p">)</span>
+</code></pre>
+<p>If you find yourself doing this often, it’s better to use prepared statements. As a rule of thumb, if your application is sending a request more than once, a prepared statement is almost always the right choice.</p>
+
+<p>When you use bound values with regular statements the type of the values has to be guessed. Cassandra supports multiple different numeric types, but there’s no reliable way of guessing whether or not a Ruby <code>Fixnum</code> should be encoded as a <code>BIGINT</code> or <code>INT</code>, or whether a Ruby <code>Float</code> is a <code>DOUBLE</code> or <code>FLOAT</code>. When there are multiple choices the encoder will pick the larger type (e.g. <code>BIGINT</code> over <code>INT</code>). For Ruby strings it will always guess <code>VARCHAR</code>, never <code>BLOB</code>.</p>
+
+<h2 id="executing-statements-in-parallel" class="target">Executing Statements in Parallel<a class="anchor" href="#executing-statements-in-parallel" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>With fully asynchronous api, it is very easy to run queries in parallel:</p>
+<pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">[</span><span class="mi">41</span><span class="p">,</span> <span class="s1">'Sam'</span><span class="p">],</span>
+  <span class="p">[</span><span class="mi">35</span><span class="p">,</span> <span class="s1">'Bob'</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="c1"># execute all statements in background</span>
+<span class="n">futures</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span><span class="o">|</span>
+  <span class="n">session</span><span class="p">.</span><span class="nf">execute_async</span><span class="p">(</span><span class="s2">"UPDATE users SET age = ? WHERE user_name = ?"</span><span class="p">,</span> <span class="n">age</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># block until both statements executed</span>
+<span class="n">futures</span><span class="p">.</span><span class="nf">each</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:join</span><span class="p">)</span>
+</code></pre>
+<p><a href="../api/future/">Read more about futures</a></p>
+
+<h2 id="prepared-statements" class="target">Prepared Statements<a class="anchor" href="#prepared-statements" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>The driver supports prepared statements. Use <code>#prepare</code> to create a statement object, and then call <code>#execute</code> on that object to run a statement. You must supply values for all bound parameters when you call <code>#execute</code>.</p>
+<pre class="highlight"><code><span class="n">statement</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">prepare</span><span class="p">(</span><span class="s1">'INSERT INTO users (username, email) VALUES (?, ?)'</span><span class="p">)</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="s1">'avalanche123'</span><span class="p">,</span> <span class="s1">'bulat.shakirzyanov@datastax.com'</span><span class="p">)</span>
+</code></pre>
+<p>You should prepare a statement for a given query <strong>only</strong> once and then resue it by calling #execute. Re-preparing the same statement will have a negative impact on the performance and should be avoided.</p>
+
+<p>A prepared statement can be run many times, but the CQL parsing will only be done once on each node. Use prepared statements for queries you run over and over again.</p>
+
+<p><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> and <code>SELECT</code> statements can be prepared, other statements may raise <code>QueryError</code>.</p>
+
+<p>For each query, statements are prepared lazily - each call to <code>#execute</code> selects a host to try (according to <a href="load_balancing/">a load balancing policy</a>) and a statement is prepared if needed.</p>
+
+<h2 id="changing-keyspaces" class="target">Changing keyspaces<a class="anchor" href="#changing-keyspaces" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>You can specify a keyspace to change to immediately after connection by passing the keyspace option to <a href="../api/cluster/#connect-instance_method"><code>Cql::Cluster#connect</code></a>, you can also use the <a href="../api/session/#execute-instance_method"><code>Session#execute</code></a> method to change keyspace of an existing session:</p>
+<pre class="highlight"><code><span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s1">'USE measurements'</span><span class="p">)</span>
+</code></pre>
+<h2 id="creating-keyspaces-and-tables" class="target">Creating keyspaces and tables<a class="anchor" href="#creating-keyspaces-and-tables" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>There is no special facility for creating keyspaces and tables, they are created by executing CQL:</p>
+<pre class="highlight"><code><span class="n">keyspace_definition</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">KEYSPACE_CQL</span><span class="sh">
+  CREATE KEYSPACE measurements
+  WITH replication = {
+    'class': 'SimpleStrategy',
+    'replication_factor': 3
+  }
+</span><span class="no">KEYSPACE_CQL</span>
+
+<span class="n">table_definition</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">TABLE_CQL</span><span class="sh">
+  CREATE TABLE events (
+    id INT,
+    date DATE,
+    comment VARCHAR,
+    PRIMARY KEY (id)
+  )
+</span><span class="no">TABLE_CQL</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">keyspace_definition</span><span class="p">)</span>
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s1">'USE measurements'</span><span class="p">)</span>
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">table_definition</span><span class="p">)</span>
+</code></pre>
+<p>You can also <code>ALTER</code> keyspaces and tables, and you can read more about that in the <a href="https://github.com/apache/cassandra/blob/cassandra-2.0/doc/cql3/CQL.textile">CQL3 syntax documentation</a>.</p>
+
+<h2 id="batching" class="target">Batching<a class="anchor" href="#batching" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If you’re using Cassandra 2.0 or later you can build batch requests, either from simple or prepared statements. Batches must not contain any select statements, only <code>INSERT</code>, <code>UPDATE</code> and <code>DELETE</code> statements are allowed.</p>
+
+<p>There are a few different ways to work with batches, one is where you build up a batch with a block:</p>
+<pre class="highlight"><code><span class="n">batch</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">batch</span> <span class="k">do</span> <span class="o">|</span><span class="n">batch</span><span class="o">|</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Sue' WHERE user_id = 'unicorn31'"</span><span class="p">)</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Kim' WHERE user_id = 'dudezor13'"</span><span class="p">)</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Jim' WHERE user_id = 'kittenz98'"</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+</code></pre>
+<p>Another is by creating a batch building it later:</p>
+<pre class="highlight"><code><span class="n">batch</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">batch</span>
+
+<span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Sue' WHERE user_id = 'unicorn31'"</span><span class="p">)</span>
+<span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Kim' WHERE user_id = 'dudezor13'"</span><span class="p">)</span>
+<span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET name = 'Jim' WHERE user_id = 'kittenz98'"</span><span class="p">)</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+</code></pre>
+<p>You can mix any combination of statements in a batch:</p>
+<pre class="highlight"><code><span class="n">prepared_statement</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">prepare</span><span class="p">(</span><span class="s2">"UPDATE users SET name = ? WHERE user_id = ?"</span><span class="p">)</span>
+
+<span class="n">batch</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">batch</span> <span class="k">do</span> <span class="o">|</span><span class="n">batch</span><span class="o">|</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">prepared_statement</span><span class="p">,</span> <span class="s1">'Sue'</span><span class="p">,</span> <span class="s1">'unicorn31'</span><span class="p">)</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET age = 19 WHERE user_id = 'unicorn31'"</span><span class="p">)</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"INSERT INTO activity (user_id, what, when) VALUES (?, 'login', NOW())"</span><span class="p">,</span> <span class="s1">'unicorn31'</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+</code></pre>
+<p>Batches can have one of three different types: <code>logged</code>, <code>unlogged</code> or <code>counter</code>, where <code>logged</code> is the default. Their exact semantics are defined in the <a href="http://www.datastax.com/documentation/cql/3.1/webhelp/index.html">Cassandra documentation</a>, but this is how you specify which one you want:</p>
+<pre class="highlight"><code><span class="n">counter_statement</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">prepare</span><span class="p">(</span><span class="s2">"UPDATE my_counter_table SET my_counter = my_counter + ? WHERE id = ?"</span><span class="p">)</span>
+
+<span class="n">batch</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">counter_batch</span> <span class="k">do</span> <span class="o">|</span><span class="n">batch</span><span class="o">|</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">counter_statement</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'some_counter'</span><span class="p">)</span>
+  <span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">counter_statement</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'another_counter'</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+</code></pre>
+<p><a href="../api/session/#batch-instance_method">Read more about <code>Session#batch</code></a></p>
+
+<p>Cassandra 1.2 also supported batching, but only as a CQL feature, you had to build the batch as a string, and it didn’t really play well with prepared statements.</p>
+
+<h2 id="paging" class="target">Paging<a class="anchor" href="#paging" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If you’re using Cassandra 2.0 or later you can page your query results by adding the <code>:page_size</code> option to a query:</p>
+<pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s2">"SELECT * FROM large_table WHERE id = 'partition_with_lots_of_data'"</span><span class="p">,</span> <span class="ss">page_size: </span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">result</span>
+  <span class="n">result</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+    <span class="nb">p</span> <span class="n">row</span>
+  <span class="k">end</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="nf">next_page</span>
+<span class="k">end</span>
+</code></pre>
+<p><a href="../api/result/#next_page-instance_method">Read more about paging</a></p>
+
+<h2 id="consistency" class="target">Consistency<a class="anchor" href="#consistency" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>You can specify the default consistency to use when you create a new <code>Cluster</code>:</p>
+<pre class="highlight"><code><span class="n">client</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="ss">consistency: :all</span><span class="p">)</span>
+</code></pre>
+<p><a href="../api/#connect-class_method">Read more about default consistency</a></p>
+
+<p>Consistency can also be passed to <code>Session#execute</code> and <code>Session#execute_async</code></p>
+<pre class="highlight"><code><span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="s1">'SELECT * FROM users'</span><span class="p">,</span> <span class="ss">consistency: :local_quorum</span><span class="p">)</span>
+
+<span class="n">statement</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">prepare</span><span class="p">(</span><span class="s1">'SELECT * FROM users'</span><span class="p">)</span>
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">statement</span><span class="p">,</span> <span class="ss">consistency: :one</span><span class="p">)</span>
+
+<span class="n">batch</span> <span class="o">=</span> <span class="n">session</span><span class="p">.</span><span class="nf">batch</span>
+<span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET email = 'sue@foobar.com' WHERE id = 'sue'"</span><span class="p">)</span>
+<span class="n">batch</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="s2">"UPDATE users SET email = 'tom@foobar.com' WHERE id = 'tom'"</span><span class="p">)</span>
+<span class="n">session</span><span class="p">.</span><span class="nf">execute</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="ss">consistency: :all</span><span class="p">)</span>
+</code></pre>
+<p><a href="../api/session/#execute-instance_method">Read more about <code>Session#execute</code></a>
+<a href="../api/#CONSISTENCIES-constant">Read more about possible consistencies</a></p>
+
+<p>The default consistency level unless you’ve set it yourself is <code>:quorum</code>.</p>
+
+<p>Consistency is ignored for <code>USE</code>, <code>TRUNCATE</code>, <code>CREATE</code> and <code>ALTER</code> statements, and some (like <code>:any</code>) aren’t allowed in all situations.</p>
+
+<h2 id="compression" class="target">Compression<a class="anchor" href="#compression" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>The CQL protocol supports frame compression, which can give you a performance boost if your requests or responses are big. To enable it you can specify compression to use in <code>Cassandra.connect</code>.</p>
+
+<p>Cassandra currently supports two compression algorithms: Snappy and LZ4. ruby driver supports both, but in order to use them you will have to install the <a href="http://rubygems.org/gems/snappy">snappy</a> or <a href="http://rubygems.org/gems/lz4-ruby">lz4-ruby</a> gems separately. Once it’s installed you can enable compression like this:</p>
+<pre class="highlight"><code><span class="n">cluster</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="ss">compressor: :snappy</span><span class="p">)</span>
+</code></pre>
+<p>or</p>
+<pre class="highlight"><code><span class="n">cluster</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="ss">compressor: :lz4</span><span class="p">)</span>
+</code></pre>
+<p>Which one should you choose? On paper the LZ4 algorithm is more efficient and the one Cassandra defaults to for SSTable compression. They both achieve roughly the same compression ratio, but LZ4 does it quicker.</p>
+
+<h2 id="logging" class="target">Logging<a class="anchor" href="#logging" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>You can pass a standard Ruby logger to the client to get some more information about what is going on:</p>
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'logger'</span>
+
+<span class="n">cluster</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span><span class="ss">logger: </span><span class="no">Logger</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="vg">$stderr</span><span class="p">))</span>
+</code></pre>
+<p>Most of the logging will be when the driver connects and discovers new nodes, when connections fail and so on. The logging is designed to not cause much overhead and only relatively rare events are logged (e.g. normal requests are not logged).</p>
+
+<h1 id="architecture" class="target">Architecture<a class="anchor" href="#architecture" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h1>
+
+<p>The diagram below represents a high level architecture of the driver. Each arrow represents direction of ownership, where owner is pointed to by its children. For example, a single <a href="../api/cluster/">Cassandra::Cluster</a> instance can manage multiple <a href="../api/session/">Cassandra::Session</a> instances, etc.</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAz4AAAGkCAIAAAB/y2eDAAAqjUlEQVR42u3d%0Ae2yVdZ4/cK5KFSoKSInoMIqGYQaB1dmg4kyNeEvYEdGNOlNMJg47JDqIwQAG%0AgcQI7rBZMLLrlTAzrAEKclnRLpdQEAHDRSiWolxaWqgpVtseWloptD9/3/D8%0Apr8uN0EKnNPzev1Bep7n4fT0+Tzvc97ntM85Lb4HACBBtLALAABUNwAALlh1%0A+z8AAMQl1Q0AQHUDAEB1AwBQ3VQ3AADVDQAA1Q0AQHVT3QAAVDcAAFQ3AADV%0ADQAA1Q0AANUNAEB1AwBAdQMAQHUDAFDdAABQ3QAAUN0AAFQ3AABUNwAAVDcA%0AANUNAADVDQAA1Q0AQHUDAEB1AwBAdQMAUN0AAFDdAABUN9UNAEB1AwBAdQPi%0A286dOzMyMrp3794iCRg3oLoBCSw7OzstLW369On79u37vrkL1S0Wi1VVVdXU%0A1NTW1tbV1TkAANUNSBjl5eU9evTIzc39PjmE6lZUVFRSUlJWVhYKXGhvjgFA%0AdQMSxowZMzIyMr5PGqG6hZ66Z8+e4uLi0N5qamocA4DqBiSMIUOGLFiwIKmq%0A27p163JyckJ7KykpqaqqcgwAqhuQMHr16hVKTFJVt6ysrNDecnNzi4qKYrGY%0AYwBQ3YCE0aZNm6qqqqSqbnPnzl22bNmmTZtCZy0rK3MMAKobkDBClWmSSlRY%0AWPj555+HJtQ8qltlZeWIESMcHoDqBiR2dcvNzZ08efJTTz01ePDgUG5effXV%0AtWvXhuUPP/xwuKq33nqrGVS3DRs29OrVyzvAAaobkMDVLWw8evToNm3ahP9y%0A0003paend+7cOXz9u9/9rqmqW3l5eWhUu3btulTV7ejRo5MmTWrXrp037wVU%0ANyCxq1uoZWHj1NTUpUuXNiwsKCjYunVrU1W3ESNGhCuZOHHiJaluO3fuHDBg%0AgM9dAFQ3IOGr27Fjxzp27Bg2njJlyik3OKG6/cu//Msdd9yxZs2a6OIjjzwS%0ALubl5UUXDx06FK5n0KBBXbt27dev3+uvvx4Wvvfee+FiuJLu3buHjUMpjO7c%0Apk+ffvvtt3fr1u3ee++NamIwduzYsM3ixYvD9fzsZz9bvXr1eVa3N954I/oB%0AVTdAdQMSvrrt3r07ajP5+flnU91CrwoXFy5cGF284YYbwsWNGzdGF3//+9+H%0A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%0AKDEFU8AUTKHZUt0Q0aTjtU9ZwBRMQXUDEYVz4Dxf90iYguqGiAKcA5+m4HFB%0AdfMcF1MA4Bw4TUF10+sBgGbbRlQ3SDpe+wRQ3U5h586dGRkZ3bt3b8F5OP8p%0ADBky5LrrrrMnL+0UZMEUTMEU4mcKjz32mMeFSzWF+K1u2dnZaWlp06dP37dv%0A3/f8WGHAsVisqqqqpqamtra2rq7OFEzBFEzBFEzBFBJ3CnFa3crLy3v06JGb%0Am2u6539wFBUVlZSUlJWVhUMkHB+mYAqmcK5T+Oqrr0xBFkzBFOJkCnF6msKM%0AGTMyMjKMtkkOjpCxPXv2FBcXh+MjtHtTMAVTONcpjBkzxhRkwRRMIU6mcP4u%0ASHUbMmTIggULjLZJDo5169bl5OSE4yO0+1Dtz34Kv/nNb0zhkk9BFuJhCvff%0Af78pyIIpBIMHDzaFSz6FOK1uvXr1Cj+M0TbJwZGVlRWOj9Dui4qKYrHY2U/h%0A5ptvNoVLPgVZkAVTkAVZMIUEqG5t2rQJDdRom+TgmDt37rJlyzZt2hTyVlZW%0AZgqmYAqmYAqmYAqJO4U4rW7hRzLXS35wmIIpmIIpmIIpmEK8TSFOT1M414Mj%0ANzd38uTJTz311ODBg0eMGPHqq6+uXbs2nmf27LPP9u7dOzMzszlF1BRMwRRM%0AwRRMwRQuwhQSu7qFjUePHt2mTZvwX2666ab09PTOnTuHr3/3u9/Fz6FQXl4e%0AZrNr166GJeE47tKly1//+tfmEVFTMAVTMAVTMAVTUN3OyltvvRU2Tk1NXbp0%0AacPCgoKCrVu3xs/BEZ5qhBs5ceLE5vrCuCmYgimYgimYgimobj/s2LFjHTt2%0ADBtPmTLldNvMmjXrrrvu6tq1a//+/V988cWamppo+dixY++4447FixfPnDnz%0A9ttvv/POO8PXDf/rzGvDLZw+fXpY3q1bt3vvvbfxgThnzpxf//rXYfnNN988%0AePDgsOS9994L3z3cyO7du4frDAdu4+s/z9sZDxE1BVMwBVMwBVMwhYs5hQSu%0Abrt3744+CCw/P/+UG4wbNy6s7dSp04QJE3r37h2+Dju6vr4+rHr44Yeji+3b%0At//5z38evg7HWW1tbfQfz7z2ueeeC0sGDhwYrjY8pejQoUMsFgvLX3rppbC8%0AdevWTzzxxMiRI3/1q1+FhWvWrOnXr19YHuY6ZsyYgwcPNlx/eFJynrczHiJq%0A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%0Abt26NVr+3nvvPfnkk7169frZz372pz/9aceOHY2vc86cOb/+9a/Df7n55psH%0ADx4cbd+1a9dwzd27d7/jjjsKCgqiLWfNmnXXXXeFVf3793/xxRdramqi5WPH%0Ajg2bLV68eMqUKeFbrF69WnUDVDegWVW30FGi18wailHDn75Fy7/++uszV7el%0AS5eGr6+88srq6upo7XPPPReWDBw4cMKECampqR06dIjFYmH5kONmzJjx9NNP%0Ahw0eeOCBhit86aWXwpLWrVs/8cQTI0eO/NWvfhUWrlmzpl+/fmH5nXfeOWbM%0AmIMHD4aF48aNC0s6deoUrrx3797h61DX6uvrG27Vbbfd1qpVq549e2ZnZ6tu%0AgOoGNKvq9tFHH4WvW7ZseezYsRP+yCyqbieczdD4Gvr06XPdddeFL7p27bp+%0A/fpoVVFRUevjvv3223Bx+PDhYYN33nmn8X8PTeuaa64J3zTqhcXFxW3atAmb%0AzZ8//8y/MG3YMvp2R48ejX6xGypXw6265ZZbwmZ+YQqobkAzrG4bNmyIKlpF%0ARUXjbQoLC6PleXl5p7uGW2+9tW/fvuGLoUOHNqz64IMPwpIOHTo8eVz0stmY%0AMWPCqqqqqv/8z/8cNmzYfffdd/nllze81BfVx3bt2jW8bne66vbhhx+Giykp%0AKaG0RUvCVYUlo0ePbrhVb775pr91A5qK0xSA+KpuobFFFW3NmjWNt4kaWOvW%0ArWtra8/wC9NDhw5169YtfP23v/0tWrVo0aKoXY0dO3bc373//vuVlZV9+vQJ%0AqwYPHhzuCjt27NhQ3cLa8PVVV13VUMhOV92iLa+55pqGe8NHH300LHnmmWca%0AbtVbb72lugHxQ3UDmrK6RX+CFr27R8NdTF1d3d133x0WDhs27AdPU5gzZ074%0AOjU1dd++fY3/eO6E37RGlS49PT26eMMNNzRUty+++CL6L8uXLz/hG0V/Njdq%0A1KjoYsOWDa8Fdu/ePVx84403VDdAdQOSorrt37//6quvDkseeeSR//mf//nv%0A//7vBx54IFy89tprT3mOwslnmN5zzz3hYmh70ekCofCFizfeeGP4FosXL540%0AadLrr7/+2WefhYXdunV77733/vmf/zl6Q7iocgVDhw4NF9PS0iZPnrx06dKJ%0AEyceOXIkLA9FKiwPPS80v+g0hWjLAQMGhFXRa3LXX3999FFgqhugugHNv7oF%0AX3311T/90z+1bt06ek2rbdu2TzzxRGlp6ZmvoaG67dy5M/yXsCR6F9/q6urR%0Ao0enpKRE19alS5foN55/+MMfLr/88lDa/vjHP77wwgvR2uiXpLFYbPjw4Zdd%0Adlm0sGvXrtFbftTV1T3++OON32QubPn0009H3y5cVWiNX375ZeNbpboBqhvQ%0ArKrb6Rw5cmTbtm2hh538N2c/QrhthYWF5eXljReG4lVZWRl9/fXXX4d61Hjt%0AsWPH8vPzGzZofMNCuTx5y4Z3dPOWvMAF4jQFIH6rm4+fV92Ak+9jVTdAdVPd%0AANUNUN34saI3SVHdANUNUN0SwI4dOzp16hSq2/Lly0N127t3r+oGqG6A6han%0A3n777T59+sybNy9Ut82bN4fqVl5e7ugCnKYAqG5xp76+Pj09fejQoZmZmStW%0ArNiyZUt+fn5FRYWjCzh/qhugujWxhQsXpqWlvfbaawsWLFi1atXWrVsLCwsP%0AHTrk6AJUN0B1i6MX27Zt2/b888+npqaGf2fNmrVkyZKPP/44Nze3uLj48OHD%0Aji5AdQOavrrxo6WkpPTt23f8+PEzZ86cM2fOsmXLNm7cuHv37tLS0u+++87R%0ABahuQNOLxWJFRUW5ubnr1q3LysqaG/eit+GIE/PmzcvMzFy0aFHobRs2bMjL%0Ayztw4EDYpUePHnVoAU5TAJpeVVVVSUnJnj17cnJyQntbFvdCdYuTW7L8uJUr%0AV65evXrjxo07duwoLCz85ptvqqur6+rqHFqANwcBml5NTU1ZWVlxcXFob7m5%0AuZviXrgrjJ8bs3nz5i1btmzfvn3Xrl379+8vLS0NVdhLboDqBlwotbW1oW2E%0A9lZSUlJUVLQn7oW7wji5JXuPKygoCKXt4MGD5eXlYU+G/VlfX++4AlQ34IKo%0Aq6sLbaOmpibUjlgsVhb3xowZEz83JtS1ioqKysrK6urqI0eOHDt2TG8DVDcA%0AgMTjNAUAgCSiugEAqG4AAKhuACc4/78dAVDdAC6S8z9jCyBRnmqqboDqBpAw%0A91eqG+CuEEB1A1DdAFQ3gBM4TQFQ3QAAiLunmqobAEDCUN0AAFQ3AABUN4AT%0AOE0BUN0AEoY3BwGS56mm6gaobgAJc3+lugHuCgFUNwDVDUB1AziB0xQA1Q0A%0AgLh7qqm6AQAkDNUNaD7PZVs0csJTW2uttdba+FmrugEAJAXVDQBAdQMAQHUD%0AAFDdVDcAANUNAADVDQBAdVPdAABUNwAAVDcAANUNAADVDQAA1Q0AQHUDAEB1%0AAwBAdQMAUN0AAFDdAABQ3QAAVDcAAFQ3AABUNwAA1Q0AANUNAADVDQBAdQMA%0AQHUDAEB1AwBQ3QAAUN0AAFQ31Q0AIIGrGwAAcU51AwBQ3QAAaGr/FzQg6jBq%0AjSIwAAAAAElFTkSuQmCC%0A" alt="Text Diagram" class="img-rounded img-thumbnail center-block ditaa">
+<h2 id="thread-safety" class="target">Thread safety<a class="anchor" href="#thread-safety" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Except for results everything in the driver is thread safe. You only need a single cluster object in your application and usually a single session.</p>
+
+<p>Result objects are wrappers around an array of rows and their primary use case is iteration, something that makes little sense to do concurrently. Because of this they’ve been designed to not be thread safe to avoid the unnecessary cost of locking.</p>
+
+<h2 id="cluster" class="target">Cluster<a class="anchor" href="#cluster" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>A Cluster instance allows to configure different important aspects of the way connections and queries will be handled. At this level you can configure everything from contact points (address of the nodes to be contacted initially before the driver performs node discovery), the request routing policy, retry and reconnection policies, and so forth. Generally such settings are set once at the application level.</p>
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'cassandra'</span>
+
+<span class="n">cluster</span> <span class="o">=</span> <span class="no">Cassandra</span><span class="p">.</span><span class="nf">connect</span><span class="p">(</span>
+            <span class="ss">:hosts</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">'10.1.1.3'</span><span class="p">,</span> <span class="s1">'10.1.1.4'</span><span class="p">,</span> <span class="s1">'10.1.1.5'</span><span class="p">],</span>
+            <span class="ss">:load_balancing_policy</span> <span class="o">=&gt;</span> <span class="no">Cassandra</span><span class="o">::</span><span class="no">LoadBalancing</span><span class="o">::</span><span class="no">Policies</span><span class="o">::</span><span class="no">DCAwareRoundRobin</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s2">"US_EAST"</span><span class="p">)</span>
+          <span class="p">)</span>
+</code></pre>
+<h2 id="session" class="target">Session<a class="anchor" href="#session" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Sessions are used for query execution. Internally a Session manages connection pools as well as tracks current keyspace. A session should be reused as much as possible, however it is ok to create several independent session for interacting with different keyspaces in the same application.</p>
+
+<h2 id="cql3" class="target">CQL3<a class="anchor" href="#cql3" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Ruby driver doesn’t parse or understand CQL3, it uses <a href="https://github.com/apache/cassandra/blob/trunk/doc/native_protocol_v2.spec">cassandra native protocol</a> to send requests to cassandra and translates responses.</p>
+
+<p>Read more about CQL3 in the <a href="https://github.com/apache/cassandra/blob/cassandra-2.0/doc/cql3/CQL.textile">CQL3 syntax documentation</a> and the <a href="http://www.datastax.com/documentation/cql/3.1/webhelp/index.html">Cassandra query documentation</a>.</p>
+
+<h1 id="troubleshooting" class="target">Troubleshooting<a class="anchor" href="#troubleshooting" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h1>
+
+<h2 id="i-get-connection-refused-errors" class="target">I get “connection refused” errors<a class="anchor" href="#i-get-connection-refused-errors" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Make sure that the native transport protocol is enabled. If you’re running Cassandra 1.2.5 or later the native transport protocol is enabled by default, if you’re running an earlier version (but later than 1.2) you must enable it by editing <code>cassandra.yaml</code> and setting <code>start_native_transport</code> to <code>true</code>.</p>
+
+<p>To verify that the native transport protocol is enabled, search your logs for the message “Starting listening for CQL clients” and look at which IP and port it is binding to.</p>
+
+<h2 id="i-get-deadlock-detected-errors" class="target">I get “Deadlock detected” errors<a class="anchor" href="#i-get-deadlock-detected-errors" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>This means that the driver’s IO reactor has crashed hard. Most of the time it means that you’re using a framework, server or runtime that forks and you call <code>Client.connect</code> in the parent process. Check the documentation and see if there’s any way you can register to run some piece of code in the child process just after a fork, and connect there.</p>
+
+<p>This is how you do it in Resque:</p>
+<pre class="highlight"><code><span class="no">Resque</span><span class="p">.</span><span class="nf">after_fork</span> <span class="o">=</span> <span class="nb">proc</span> <span class="k">do</span>
+  <span class="c1"># connect to Cassandra here</span>
+<span class="k">end</span>
+</code></pre>
+<p>and this is how you do it in Passenger:</p>
+<pre class="highlight"><code><span class="no">PhusionPassenger</span><span class="p">.</span><span class="nf">on_event</span><span class="p">(</span><span class="ss">:starting_worker_process</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">forked</span><span class="o">|</span>
+  <span class="k">if</span> <span class="n">forked</span>
+    <span class="c1"># connect to Cassandra here</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre>
+<p>in Unicorn you do it in the config file:</p>
+<pre class="highlight"><code><span class="n">after_fork</span> <span class="k">do</span> <span class="o">|</span><span class="n">server</span><span class="p">,</span> <span class="n">worker</span><span class="o">|</span>
+  <span class="c1"># connect to Cassandra here</span>
+<span class="k">end</span>
+</code></pre>
+<p>Since prepared statements are tied to a particular connection, you’ll need to recreate those after forking as well.</p>
+
+<p>If your process does not fork and you still encounter deadlock errors, it might also be a bug. All IO is done is a dedicated thread, and if something happens that makes that thread shut down, Ruby will detect that the locks that the client code is waiting on can’t be unlocked.</p>
+
+<h2 id="i-get-query-error" class="target">I get <code>QueryError</code>
+<a class="anchor" href="#i-get-query-error" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>All errors that originate on the server side are raised as <code>QueryError</code>. If you get one of these the error is in your CQL or on the server side.</p>
+
+<h2 id="i-m-not-getting-all-elements-back-from-my-list-set-map" class="target">I’m not getting all elements back from my list/set/map<a class="anchor" href="#i-m-not-getting-all-elements-back-from-my-list-set-map" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>There’s a known issue with collections that get too big. The protocol uses a short for the size of collections, but there is no way for Cassandra to stop you from creating a collection bigger than 65536 elements, so when you do the size field overflows with strange results. The data is there, you just can’t get it back.</p>
+
+<h2 id="authentication-doesn-t-work" class="target">Authentication doesn’t work<a class="anchor" href="#authentication-doesn-t-work" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If you’re using Cassandra 2.0 or DataStax Enterprise 3.1 or higher and/or are using something other than the built in <a href="../api/auth/providers/password/"><code>Password</code> authenticator</a> your setup is supported.</p>
+
+<p>DSE before 3.1 uses a non-standard protocol and is not currently supported.</p>
+
+<h2 id="i-get-end-of-file-reached-i-m-connecting-to-port-9160-and-it-doesn-t-work" class="target">I get “end of file reached” / I’m connecting to port 9160 and it doesn’t work<a class="anchor" href="#i-get-end-of-file-reached-i-m-connecting-to-port-9160-and-it-doesn-t-work" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Port 9160 is the old Thrift interface, the binary protocol runs on 9042. This is also the default port for ruby-driver, so unless you’ve changed the port in <code>cassandra.yaml</code>, don’t override the port.</p>
+
+<h2 id="something-else-is-not-working" class="target">Something else is not working<a class="anchor" href="#something-else-is-not-working" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Open an issue and someone will try to help you out. Please include the gem version, Casandra version and Ruby version, and explain as much about what you’re doing as you can, preferably the smallest piece of code that reliably triggers the problem. The more information you give, the better the chances you will get help.</p>
+
+<h1 id="performance-tips" class="target">Performance tips<a class="anchor" href="#performance-tips" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h1>
+
+<h2 id="use-asynchronous-apis" class="target">Use asynchronous apis<a class="anchor" href="#use-asynchronous-apis" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>To get maximum performance you can’t wait for a request to complete before sending the next. Use <code>_async</code> method to run multiple requests in parallel</p>
+
+<h2 id="use-prepared-statements" class="target">Use prepared statements<a class="anchor" href="#use-prepared-statements" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>When you use prepared statements you don’t have to smash strings together to create a chunk of CQL to send to the server. Avoiding creating many and large strings in Ruby can be a performance gain in itself. Not sending the query every time, but only the actual data also decreases the traffic over the network, and it decreases the time it takes for the server to handle the request since it doesn’t have to parse CQL. Prepared statements are also very convenient, so there is really no reason not to use them.</p>
+
+<h2 id="use-j-ruby" class="target">Use JRuby<a class="anchor" href="#use-j-ruby" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If you want to be serious about Ruby performance you have to use JRuby. The ruby driver is completely thread safe, and the CQL protocol is pipelined by design so you can spin up as many threads as you like and your requests per second will scale more or less linearly (up to what your cores, network and Cassandra cluster can deliver, obviously).</p>
+
+<p>Applications using ruby driver and JRuby can do over 10,000 write requests per second from a single EC2 m1.large if tuned correctly.</p>
+
+<h2 id="try-batching" class="target">Try batching<a class="anchor" href="#try-batching" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>Batching in Cassandra isn’t always as good as in other (non-distributed) databases. Since rows are distributed accross the cluster the coordinator node must still send the individual pieces of a batch to other nodes, and you could have done that yourself instead.</p>
+
+<p>For Cassandra 1.2 it is often best not to use batching at all, you’ll have to smash strings together to create the batch statements, and that will waste time on the client side, will take longer to push over the network, and will take longer to parse and process on the server side. Prepared statements are almost always a better choice.</p>
+
+<p>Cassandra 2.0 introduced a new form of batches where you can send a batch of prepared statement executions as one request (you can send non-prepared statements too, but we’re talking performance here). These bring the best of both worlds and can be beneficial for some use cases. Some of the same caveats still apply though and you should test it for your use case.</p>
+
+<p>Whenever you use batching, try compression too.</p>
+
+<h2 id="try-compression" class="target">Try compression<a class="anchor" href="#try-compression" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h2>
+
+<p>If your requests or responses are big, compression can help decrease the amound of traffic over the network, which is often a good thing. If your requests and responses are small, compression often doesn’t do anything. You should benchmark and see what works for you. The Snappy compressor that comes with ruby driver uses very little CPU, so most of the time it doesn’t hurt to leave it on.</p>
+
+<p>In read-heavy applications requests are often small, and need no compression, but responses can be big. In these situations you can modify the compressor used to turn off compression for requests completely. The Snappy compressor that comes with ruby driver will not compress frames less than 64 bytes, for example, and you can change this threshold when you create the compressor.</p>
+
+<p>Compression works best for large requests, so if you use batching you should benchmark if compression gives you a speed boost.</p>
+
+
+        </div>
+      </div>
+    </div>
+
+    
+    <footer class="container text-muted">
+      <ul class="list-inline">
+      
+        
+        <li>
+          <a href="https://github.com/datastax/ruby-driver/">Code</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="http://datastax.github.io/ruby-driver/">Docs</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://datastax-oss.atlassian.net/browse/RUBY/">Issues</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://groups.google.com/a/lists.datastax.com/forum/#!forum/ruby-driver-user">Mailing List</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="irc://irc.freenode.net/datastax-drivers">IRC Channel</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://github.com/datastax/ruby-driver/releases">Releases</a>
+        </li>
+      
+      </ul>
+    </footer>
+    
+
+    <script src="../../js/jquery.js"></script>
+    <script src="../../js/bootstrap.js"></script>
+    <script src="../../js/angular.js"></script>
+    <script src="../../js/mousetrap.js"></script>
+    <script src="../../js/hotkeys.js"></script>
+    <script src="../../js/ZeroClipboard.js"></script>
+    <script src="../../js/lunr.js"></script>
+    <script src="../../js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="A pure Ruby client for Apache Cassandra">
+    <meta name="author" content="DataStax">
+
+    <title>Ruby Driver for Apache Cassandra - Load Balancing</title>
+
+    <link rel="icon" href="../../../favicon.ico">
+    <link rel="apple-touch-icon" href="../../../favicon.png">
+    <link href="../../../css/style.css" rel="stylesheet">
+    <link href="../../../css/pygments.css" rel="stylesheet">
+    <link href="../../../css/hotkeys.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body ng-app="docs" data-spy="scroll" data-target="#table-of-contents" data-offset="69">
+    <header class="container-fluid navbar">
+      <div class="row">
+        <div class="col-sm-4">
+          <a class="navbar-brand" href="../../"><img alt="Brand" src="../../../img/logo.png">Ruby Driver for Apache Cassandra</a>
+        </div>
+        <div class="col-md-4 col-md-offset-4">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="list-inline" role="nav">
+                <li><a href="https://academy.datastax.com/" class="navbar-link">DataStax Academy</a></li>
+                <li><a href="http://www.datastax.com/dev/blog" class="navbar-link">Tech Blog</a></li>
+                <li><a href="http://www.datastax.com/what-we-offer/products-services/support" class="navbar-link">Support</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <form id="search" class="form-search dropdown visible-lg-block" ng-controller="search" ng-class="{open: hasResults}" role="search" ng-submit="submit()" data-spy="affix" data-offset-top="130">
+                <div class="form-group has-feedback">
+                  <input type="search" class="form-control input-sm mousetrap" placeholder="Search..." ng-model="q" ng-change="search('v1.0.0-beta.1')" ng-disabled="!searchReady" disabled data-hotkey="{down: moveDown, up: moveUp, esc: reset}" data-search>
+                </div>
+                <ul class="dropdown-menu search-results" role="menu">
+                  <li ng-repeat="result in results" ng-class="{'bg-warning': $index == current}"><a ng-href="{{basePath}}{{result.path}}"><span ng-bind-html="summary(result)"></span></a></li>
+                </ul>
+              </form>
+            </div>
+            <div class="col-md-4">
+              <a href="http://www.datastax.com/download" class="btn btn-primary btn-sm">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row crumbs-wrapper">
+        <div class="col-md-12">
+          <nav id="crumbs" data-spy="affix" data-offset-top="130">
+            <ol class="breadcrumb">
+              
+              <li>
+                <div class="btn-group">
+                  <button id="current-version" class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    v1.0.0-beta.1
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu" aria-labelledby="current-version">
+                  
+                    <li><a href="../../../features/load_balancing/">v2.1.5</a></li>
+                  
+                    <li><a href="../../../v2.0.1/features/load_balancing/">v2.0.1</a></li>
+                  
+                    <li><a href="../../../v1.2.0/features/load_balancing/">v1.2.0</a></li>
+                  
+                    <li><a href="../../../v1.1.1/features/load_balancing/">v1.1.1</a></li>
+                  
+                    <li><a href="../../../v1.0.0/features/load_balancing/">v1.0.0</a></li>
+                  
+                    <li><a href="../../../v1.0.0-rc.1/features/load_balancing/">v1.0.0-rc.1</a></li>
+                  
+                    <li><a href="../../../v1.0.0-beta.3/features/load_balancing/">v1.0.0-beta.3</a></li>
+                  
+                    <li><a href="../../../v1.0.0-beta.2/features/load_balancing/">v1.0.0-beta.2</a></li>
+                  
+                    <li class="disabled"><a href="./">v1.0.0-beta.1</a></li>
+                  
+                  </ul>
+                </div>
+              </li>
+              
+              
+              
+              
+              <li><a href="../../">Datastax Ruby Driver for Apache Cassandra</a></li>
+              
+              
+              
+              
+              
+              <li><a href="../">Usage</a></li>
+              
+              
+              
+              
+              
+              <li class="active">Load Balancing</li>
+              <li class="dropdown" id="table-of-contents">
+                <div class="btn-group">
+                  <button id="current-section" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                    Jump to&#8230; <span class="caret"></span><span class="sr-only">Table of Contents</span>
+                  </button>
+                  <ul class="dropdown-menu nav nav-pills nav-stacked">
+                    <li><a href="#load-balancing">Page Top <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></a></li>
+                  </ul>
+                </div>
+              </li>
+              
+              
+              
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="container-fluid" id="content">
+      <div class="row">
+        <div class="col-md-3">
+          <div id="navigation" class="side-nav" role="tablist" aria-multiselectable="true">
+            <h3>Contents</h3>
+            <ul class="nav nav-pills nav-stacked">
+  
+  
+  
+  <li>
+    <a href="../../api/">Cassandra <small>module</small></a>
+  </li>
+  
+  
+  
+  
+  <li class="active">
+    <a href="../">Usage <small>page</small></a>
+    <ul class="nav nav-pills nav-stacked">
+  
+  
+  
+  <li>
+    <a href="../basics/">Basics <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../asynchronous_io/">Asynchronous IO <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../security/">Authentication <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../debugging/">Debugging <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li class="active">
+    <a href="./" class="current">Load Balancing <small>page</small></a>
+    <ul class="nav nav-pills nav-stacked">
+  
+  
+  
+  <li>
+    <a href="round_robin/">Round Robin Policy <small>feature</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="datacenter_aware/">Datacenter-aware Round Robin Policy <small>feature</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="whitelist/">White List Policy <small>feature</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="implementing_a_policy/">Implementing custom load balancing policies <small>feature</small></a>
+  </li>
+  
+  
+</ul>
+
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../retry_policies/">Retry Policies <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../state_listeners/">State Listeners <small>page</small></a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a href="../reconnection/">Reconnection <small>page</small></a>
+  </li>
+  
+  
+</ul>
+
+  </li>
+  
+  
+</ul>
+
+          </div>
+        </div>
+        <div class="col-md-9 content">
+          
+
+<h1 id="load-balancing" class="target">Load Balancing<a class="anchor" href="#load-balancing" aria-hidden="true"><span class="glyphicon glyphicon-link"></span></a>
+</h1>
+
+<p>Load balancing policies are responsible for routing requests, determining which nodes the driver must connect to as well as the order in which different hosts will be tried in case of network failures. Load balancing policies therefore must also be <a href="../state_listeners/">state listeners</a> and receive notifications about <a href="../state_listeners/membership_changes/">cluster membership and availability changes</a>.</p>
+
+<p>Each cluster can be configured with a specific load balancing policy to be used.
+And the same policy will be used for all requests across all sessions managed by that cluster instance.</p>
+
+<p>Here is a high level diagram of how a load balancing policy is used during query execution:</p>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAwIAAAFCCAIAAADNGf2qAAAwnElEQVR42u2d%0Ae0xVV973BVFAQU8tCEREq+igYkcLtXi3I16SoWO1OmpHOnZE5Um9JRDAqqBv%0AtLbNlInEy6gppiU2rQheatTYiNV0iHaE1GqpYVQsWqUqIBRvIDzP72W93c95%0AD2dvDnCEA+fz+YPstfZi7XXW+u7f+u7LOavTfwMAAAA4JZ3oAgAAAMAGAQAA%0AADilDaoDAAAAcAKwQQAAAIANwgYBAAAANggAAAAAGwQAAACADQIAAADABgEA%0AAABggwAAAACwQQAAAADYIAAAAABsEAAAAAA2CAAAAAAbBAAAAIANAgAAAMAG%0AAQAAAGCDAAAAALBBAAAAANggAAAAAGwQAAAAADYIAAAAABsEAAAAgA0CAAAA%0AwAYBAAAAYIMAAAAAsEEAAACADergNqioqOjChQv37t1jvAE6JIWFhXKO379/%0An7jB5wWU075t0Pbt2zdu3Hjq1Ck71jljxoxOnTrt2LFDJZctWzZ06NDPP//c%0Ajod4FnXCs6C2tjY3NzcpKelPf/rT8uXLU1NT7Vs/StBj3759cmqfOXPmWVQe%0AFhYm5/jBgwcNDi1s2rRp//79d+7caUbcsDvPTira5xW2bNly6NChJ0+eOEKc%0A7JCSNmfbtm1t3qpnNHAGonrWZ4pz2SC5pOtUz0svvfTsbNBbb73l6+u7Z8+e%0AZldYWlp67ty5y5cvazktrxNaxwOJ+xEx9OjRY/z48SaTycXFxb6HQAnGp+GG%0ADRta3wapQ3ft2lWFFxl0mSra3AY9O6molnfp0sXNzU195EGDBpWXl7dynHQS%0ASUs/d/uN4cOHt3IbWm0yMhAVNsieyDW6hCp3d3fp07y8vGdkg1pObGysVJic%0AnEwgaF9cvHhRBs7Dw+P27duSfPr06XfffUe3OIkN+vTTT2XOSElJke3OnTs/%0AfPiwbW3Qs+7qv//97w8ePMjKyhLbJ8mPP/64o37eDilpR5uMDESFDbIb1dXV%0AAQEBc+bMmTdvnvTpO++8Y743MTFx9OjR2dnZmzdvDg0NHTJkiPnjDOO9FoOk%0AFdYK7N27d+LEiXJ0sbdRUVEqMyMjY/78+SEhIVLb8uXLZQbV8v38/KTCwMBA%0Aqefq1atW6xR9jB07VkqOHDly9erVIh2Lo+/evTs8PHzMmDHm/wXPlEuXLsnA%0Aubq6nj9/vuGNItGMjIjIYPLkyZoLv3///qZNmyIjI2UoR4wYsWXLFuN8lNCM%0AOUOvi/TOQaGmpmbNmjW/q+f999+XIbDFBsn2iRMnZFv+q9FDWMQNg5KNDqXV%0ACGMhFeNKJDxKzwwePFh93vj4eCms94RRm7FUcvjw4ZL84IMPjHu7GXFy/fr1%0AUkZOBK1Menq6VP7LL784sw0qKiqSTpCeyc/Pl2RlZeXUqVNlyIxDjZ5OlixZ%0AIlVpL4rMnDlTkhLKWnkyMhCVHc8UZ7dBEsKkK48fP67ilMlkMr9cUx0t13wy%0AlsHBweqmnIprNu7VBskiuXbtWnV1KPZrxYoVEyZMUPmv15OWlrZo0SIpMG3a%0ANJUvclQxV4YwISFB3VewqDMpKUmSzz///Lp164YOHSrbMvZPnz7VSkrSy8tr%0A2LBh6pM+fvwYj9I6vPjii9Ln7u7uGzdufPTokZa/cuVKyR83bpwMWY8ePby9%0AvdX93rfffluN/rZt20Qemr3Wy0cJTZ0zDLpI7xwUpM8lR7pOAquYUXXKG9sg%0AGaMDBw5I8JV+3r9/v/Fp3nAoGy2pN5R6EcZqXNKr5L/+678kp2fPntJLf/zj%0AH235vGrGkklIXbgfPXrUFkE2KU6qoO3j46NeE5F6BgwY8NprrznV3aC4uLjr%0Av6F6UosnEm1kBJctW9a1a9cffvjBONTo6UQGSPI1xQYFBUny7NmzrTwZGYjK%0AXmcKNqhOTp5+/frJ8IhZfuGFF6SDxFRadJ84ZXGyUmb27NlKSbbvtXp637hx%0AQz3p/OKLL/QaJhX26tVLRr2kpETvPqTVOr/55htJSoCQIZfkZ599ppUcOHCg%0Aqq13796SPHnyJAaldZALJnUdI8i1dW5urmRK/Opcz927dyW5ePFi2btz507Z%0AlvhifiWtoZePEppkg4y7SO8clGFSj85VFJaIoeK7sS1QyJWS+YsUBqe53q1+%0AvZJWh9IgwliNS1YrkelNVSKXiKqwmkKMP6/EwylTpqg3osQpSi/ZIsgmxUmp%0AwdfXV/LVNX1WVpZsf/31105lg8zRvi1VVVUlQyk5UkakkpKSovL1Qo2BTgxs%0AUGtORnqisteZgg2q+/nnn0UZCxcuzKvnb3/7m/TOpEmT9EKG6EaS/v7+zdhr%0Anjxy5Ih6WURUa9GkysrKrVu3RkdHy6irmKtuOTaqvC+//FK2PT09tRfppQZ1%0A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%0AXq/PbbRBem02aJJeP+vlGwyl3tH18gGAuQwbhHTanw3avn27eTG5vpfM119/%0AXbYnTJjw8ssvN6zq0KFDUsbb23t+PeqeR0JCguyqrKzcunVrdHT0lClT3N3d%0AJV89DDpy5Ihse3h4VFVVWXU227ZtU8mwsDBJHj582MAGWS385Zdfyranp6e6%0AlSVIGyQnLi5Otnft2qVWKR85cmR6enpNTY0dbZBe41tog/TabNAkvX7WyzcY%0ASr2j6+W3Mq6urp0AWh3mMmwQNqij2SCLOfj8+fOS2aVLl+PHj1u9eaPdJRLD%0AkZiYmPQbmZmZFRUVw4cPl11RUVEpKSkmk0mzQbJXtnv27Kl5FL1m2GKDrBZW%0Ah+jVq1dtba3a+8Ybb0jOO++8o5KnT58WV6di2axZs+xog/Qa30IbpNdmgybp%0A9bNevt5QGhzdIJ+zG5hTUDs2CMk2wqRJk9rkuOoVkFWrVhnbICE0NFT5iRde%0AeMHqtX5hYaGaAs+cOdNwTtU+oJqelQ0qKChQ/yLu6hnZIO0Q2svCgYGB5rdq%0AFOIeJNPFxaW4uNhqt1gwfvx4KbBr1666+td9xCDaboMa7XMbvylm0WaDJun1%0As16+3lAaHL3RfCYGYE5B7dggbJDDterYsWNyaLEmYlasvq6r8eGHH6qp0eBL%0AQNHR0VJgwIABGzZsyM7OTklJkcLqTlJAQEBGRsacOXPUYwvNhcyaNUuS/v7+%0AGzduFKOQnJz86NEjO9og7RARERHyYdWdmL59+1ZWVtbVv/Xy0UcfiVf45JNP%0AJL9bt24qv2G3WKDeLB40aNDSpUv79Omj3jey0QY12ufGNkivzcZN0utnvXyr%0AQ2lwdL18zm5gTkHt2CAk67itqqmpmTt3rpoyDxw4YDAH//zzz507d+7Vq9ev%0Av/6qV1tVVVVcXJynp6cyTL6+vurRT0xMjLu7uxggmaHj4+PVXvUgpry8XGbQ%0Arl27qkw/Pz/1bXY72iA5xKJFi9TdEWnDq6+++uOPP6pdkZGR3bt3l3xp3tSp%0AU0+cOKHXLQ1vfY0aNUp97/306dNNeijWaJ8b2yC9Nhs3Sa+f9fL1hlLv6Hr5%0AnN3AnILasUFI1tFb9ejRo5s3bxqXyc3NFQ+xZs2aRmurra0tKioqLS01z5Tp%0AtqKiQm2XlJRYLJhVXV195coVrcCzQB1C+8Ug89YWFxdb9XaNdovVG0V27HOD%0AHtZrs3GT9PpZL9/qUOod3aBVrQa/Ig3YIMAGYYPsz5MnT0JDQ+VC/9atW5xL%0AAADYIGwQkrUnbfIr0raTmZkZHh7+7rvvciIBAGCDsEFIFgAAABuEDUKyAACA%0ADWIuwwYhWQBoK44ePZqUlEQ/ADYIsEFIB8DpiImJYUlXwAYBNqi9Smf69Onf%0Af/89SgVoBoWFhcHBwWVlZXQFYIMAG9QupZOTk+Pv7y+Xs22yCgFA++XEiRNy%0A7jj41y2BOQUbhA3CBjVCQUHBggULJKCnpKRIMj093XwR44ULF5oXZi972au4%0Adu1afn5+G565JpOJOQYbxFyGDUKygHIAbQCjj+qwQUgWUA6gDWD0UR02CMkC%0AygG0AYw+qsMGEbAA5QDaAEYf1WGDCFiAcgBtAKOP6rBBSAdQDqANYPRRHTYI%0A6QDK6eAUFhaeOXMGbUD7Zdy4cZ10CA4ORnXYIAIWoBzQJSUlZdWqVWgD2i+p%0Aqal6Nkj95BuqwwYRsADlgHVCQ0N9fHwePnyINqCdcufOHQ8PD6s2qDUXREJ1%0A2CCkAyinnZGbm6tmi6NHj6INaL9Mnz69oQeKiIhAddggAhagHNAlPj5eTRiz%0AZ89GG9B+2bdvX0Mb9OGHH6I6bBABC1AO6OLj46MmDC8vr8rKSrQB7RRRr2jY%0AwgbduXMH1WGDCFiAcsA6J06cMJ8zPv30U7QB7ZcFCxaY6zkyMhLVYYMIWIBy%0AwHGnDbQBHcnWozpsENIBlNNuqKysNJlMbfsQAW2AfTF/yFtWVobqsEEELEA5%0AYB1HeKUUbYB9adtX/lEdNgjpAMppNzjCF4zRBtiXtv0BCFSHDUI6gHLaBwY/%0AN1dQUIA2oP0SEhLSVj8HiuqwQUgHUE77wEEWH0AbYHfacHEYVIcNQjqActoH%0ADrIUJdoAu9OGSwWjOmwQ0gGUQ0/yiYDzCLBBSAdQDj3JJwLOI8AGIR1AOfQk%0Anwg4jwAbhHQA5dCTfCLgPAJsENIBlENP8okA1WGDsEFIB1AOPcknAlSHDcIG%0AAaAcepJPBKgOG4R0AFAOPdlcTCYTw9ouKCgoWLBgQWBgoPrdzvT0dPNfsVq4%0AcKF5YfY6wt5r167l5+djgwjBgHLoSYAWkZOT4+/vn5qaWlxcTG+0F06cOOHj%0A4yNjhw0iBAPKoScBms/06dO///57+qHdUVhYGBwcXFZWhg0iBAPKoScBwOmI%0AiYlJTU3FBhGCAeXQkwDgdBw9enTZsmXYIEIwoBx6EgAAG0QIBpRDTwIAYIMI%0AwYBy6EkAY+zyVSNFaWnpoUOH/v3vfz98+LAl9RQWFl64cOH+/fsO0kVFRUXS%0Annv37mGDCMEAKIeeBFRnhUWLFnXt2tXFxUUqPHjw4LJly4YOHfr55583o6qw%0AsDBViYN00YwZM6Q9O3bswAZxMgCgHHoSUJ0lN27cEAPUt2/fW7du/ec//7l9%0A+/Zbb73l6+u7Z88ex7dBpaWl586du3z5cqvZoEaP2CSuXbuGDSIEA8qhJwHa%0ATHX//Oc/pZ4///nPdmlSK9ug2NhYOVxycnKr2aBGj9jKI4gNIgQDyqEnAdU1%0Ak61btwYFBUk9vr6+o0eP/uCDDyQzMTFRtrOzs1UZLbl79+7w8PAxY8Zou4Sa%0Ampo1a9b8rp73339/xIgRBjbIuKra2trU1FTJDwgImDx5cl5eXl39yz1jx46V%0A/1KrT1RWVk6dOjU+Pl62MzIy/Pz85HCBgYFS4OrVqwY2yOoRhY8//ljql3pG%0Ajhy5evXqBw8eqPz79+9v2rQpMjJSdsmH2rJli41HxAYRggHl0JMArcGkSZNa%0AWMORI0cmTJgg6g0NDU1ISMjKymp4B0UlZdb38vIaNmyYbJtMpsePH6u9K1as%0AkBzZJRZHTINaQkvPBhlXtXLlSskZN27cunXrevTo4e3tXV5eruW/+OKLUnLZ%0AsmVdu3b94YcfJP/UqVPKdYm5kcbfvn27qUdMSkqSnOeff16OOHToUFXy6dOn%0Asuvtt9+W5LRp07Zt2yafUf3OoS1HxAYRggHl0JMA7Yb33nvPYu1PqzZo4MCB%0AJSUlkuzdu7ckT548Kdt37951d3eX5NGjR9XtHGUmjG2Q1aquX7/euR6pU5KL%0AFy+WXTt37pTtqqoq+RdJyr+7uLioFWQVNj4Us3rEGzduuLm5SfKbb76R5JMn%0AT8QqSfKzzz6TpBgd2Va3x8zhoRghGFAOWO9JgFbGZDK1mg3atm2bSqq3fw4f%0APizbZ86ckW3xLhUVFeZ7jW2Q1aoOHTok297e3vPrUTddEhISVMmcnBz1RTax%0AWdq9HNttkNUjfvnll7Lt6ekpBkjtnTJliuTExcXJ9q5du1Qnjxw5Mj09vaam%0A5lnYoP79+2ODmMwA5QCAo98N0pLmTkLsjmx3795dcwm22CCrVWVlZSlTkpiY%0AmPQbmZmZqmRBQYG67fTSSy9VV1c31QZZPaJULtu9evWqra1Ve9944w3Jeeed%0Ad1Ty9OnTL7/8sjJDs2bNehY2qOVgg5jMAOUAQNvYoLy8POUSvvvuO0n+/PPP%0A6qlTM2xQYWGhqurMmTMW/yW+R+xIYD1SYOPGjdou9drQqlWrmmGDxFqpI166%0AdEntVfVrt44U+/fvl0wXF5fi4mJbjogNYjIDlAMArYFdfkW6JTaopqZm8ODB%0AkvT39xd/EBwc/NxzzzXPBgnR0dGSHDBgwIYNG7Kzs1NSUtT3s9avXy8u5Kuv%0Avjp27JgUcHd314yLygkKCsrKyjJ4RVrviLNmzZJkRESE1KNu8/Tt27eysrKu%0A/uWkjz766OzZs5988onkd+vWTeU3ekRsEJMZoBwAaDfnb0tskPDtt9+KdVAv%0AKqWnpzf7oVhd/avQcXFxnp6e6iaNr69vcnLy+fPnu3TpIh5LlVm6dKnseuWV%0AV9RjOPk7d+5c9WrzgQMHmnrE8vLyRYsWSf2S6erq+uqrr/74449qV2RkZPfu%0A3ZXrmjp16okTJ1R+o0fEBjGZAcoBACc6f2tra3/66Sft9aCW11ZUVFRaWmr7%0Avzx69OjmzZvNPmJ1dfWVK1e0Xwwyb0lxcfGvv/5q9yNq8CvSTGaAcgCA85cR%0AxAZxMnRoHHaVY5QDQOQHbBBdCc8Wh13lGOUAtF9CQkLohHaNh4cHNojJzBL7%0Art/rmDbIcT4jNggAoE0oKysLDQ3FBjGZWeJoP071LGyQ43xGbBAAQJuQn58f%0AExODDXKKyUxbVXjTpk1DhgxRv3VhdTFhq+v3LlmyRLZPnTqlaps5c6Yktd+N%0AsFq58TrGzW5enc6yw4020twG2X2NYmwQAIBzgg1qH5OZMgFhYWGurq7BwcFq%0AWTuriwlbXb9XvILk7N+/X9UWFBQkybNnzxpUbryqcLObV6ez7LCNjVQ2yO5r%0AFGODAACwQdggR7dBgwcPvnHjhsoxWEy44QMjWxyGeeV1hqsKt7B5essO226D%0A6ngoBgD2Y/r06XI9ppZ6AMenrKwMG+SkNmj79u1ajsFiws2zQeaV1xmuKtzC%0A5uktO4wNgg6GXVYvh1agoKBgwYIF/v7+cjpbrFh+7do18xXpHX+vqK7dtbmp%0Ae+37/T5sUHuyQeZfFzdYTLh5Nsjiu+jGP6DekubV6Sw7jA0CogoAqmtlsEHt%0A1QYZLCbccP3e8ePHS86uXbvq6l+sUeu/PFMbZNA8DYtlh5vUSMdZo5igA2gD%0AUB02COm0tg2q019MuOH6vWvXrpWcQYMGLV26tE+fPmpNu2dqgwyap7fscJMa%0A6ThrFBN0AG0AqsMGIZ02sEFWFxOus7Z+b2Fh4ahRo9Q3zE+fPt0KD8UMmqe3%0A7HCTGuk4axQTdABtAKrDBiGdNkNvMeGG6/e2yV0Tq80zWHa4SY201xrFBB1A%0AG4DqsEHYIACUA2gDUB02COnoUFlZGRsbi26AoANoA1AdNsi5pJObmxsSEoLI%0AgKADaANQHTbIiaRTXV2dkpLi4eGh3vZFN0DQAbQBqA4b5BTSKSgoiIiIMP8J%0AS3QDBB1AG4DqsEEdXzrbt283mUyd/n/QDRB0AG0AqsMGdWTp3LlzJyoqqpM1%0A0A0QdABtAKrDBnVY6Rw+fNjHx6eTDugGCDqANgDVYYM6rHTS09MbPgsD58R4%0AnXCCDqANQHXYoA4onWvXrk2aNIm7QUDQAbQBqA4b5KTSee+997TvyWODgKAD%0AaANQHTbIuaSTn5+vfjURGwQEHUAbgOqwQU4nnYcPHy5btgwbBAQdQBuA6rBB%0ATiqdEydOBAYGIjIg6ADaAFSHDXJG6VRWVs6ePRvdAEEH0AY4IMbfbAVsEAEL%0AUA6gDQDABhGwAOUA2gDABmGDCFiAcgBtAGCDsEEAKAfQBgA2iIAFgHIAbQBg%0AgwhYACgH0AYANoiABYByAG0AYIM6FvzWAqAcQBsA2KD/plMAAAAAGwQAAACA%0ADQIAAADABgEAAABggwAAAACwQQAAAADYIAAAAABsEAAAAAA2CAAAAAAbBAAA%0AAIANAgAAAMAGAQAAAGCDAAAAALBBAAAAANggAAAAAGwQAAAAADYIAAAAABsE%0AAAAAgA0CAAAAwAYBAAAAYIMAAAAAsEEAAACADcIGAQAAADYIGwQAAADYIAAA%0AAABsEAAAAAA2CAAAAAAbBAAAAIANAgAAAMAGAQAAAGCDAAAAANqZDQIAAABw%0AKrBBAAAAgA0CAAAAcCb+B76Y9ZMI21vLAAAAAElFTkSuQmCC%0A" alt="Text Diagram" class="img-rounded img-thumbnail center-block ditaa">
+
+
+        </div>
+      </div>
+    </div>
+
+    
+    <footer class="container text-muted">
+      <ul class="list-inline">
+      
+        
+        <li>
+          <a href="https://github.com/datastax/ruby-driver/">Code</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="http://datastax.github.io/ruby-driver/">Docs</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://datastax-oss.atlassian.net/browse/RUBY/">Issues</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://groups.google.com/a/lists.datastax.com/forum/#!forum/ruby-driver-user">Mailing List</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="irc://irc.freenode.net/datastax-drivers">IRC Channel</a>
+        </li>
+      
+        <li>·</li>
+        <li>
+          <a href="https://github.com/datastax/ruby-driver/releases">Releases</a>
+        </li>
+      
+      </ul>
+    </footer>
+    
+
+    <script src="../../../js/jquery.js"></script>
+    <script src="../../../js/bootstrap.js"></script>
+    <script src="../../../js/angular.js"></script>
+    <script src="../../../js/mousetrap.js"></script>
+    <script src="../../../js/hotkeys.js"></script>
+    <script src="../../../js/ZeroClipboard.js"></script>
+    <script src="../../../js/lunr.js"></script>
+    <script src="../../../js/app.js"></script>
+  </body>
+</html>
