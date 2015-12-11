@@ -34,8 +34,9 @@ module Cassandra
       # @return [String] the current keyspace for the underlying connection
       attr_reader :keyspace, :error
 
-      def initialize(connection, scheduler, protocol_version, compressor=nil, heartbeat_interval = 30, idle_timeout = 60)
+      def initialize(connection, logger, scheduler, protocol_version, compressor=nil, heartbeat_interval = 30, idle_timeout = 60)
         @connection = connection
+        @logger = logger
         @scheduler = scheduler
         @compressor = compressor
         @connection.on_data(&method(:receive_data))
@@ -172,7 +173,9 @@ module Cassandra
         end
         if id
           @connection.write do |buffer|
-            @frame_encoder.encode(buffer, request, id)
+            data = @frame_encoder.encode(buffer, request, id)
+            @logger.debug("Sending data #{data.to_s.inspect}")
+            data
           end
         else
           @lock.lock
@@ -271,6 +274,7 @@ module Cassandra
       end
 
       def receive_data(data)
+        @logger.debug("Received data #{data.inspect}")
         reschedule_termination
         @frame_decoder << data
       end

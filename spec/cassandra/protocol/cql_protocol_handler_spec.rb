@@ -23,7 +23,7 @@ module Cassandra
   module Protocol
     describe CqlProtocolHandler do
       let :protocol_handler do
-        described_class.new(connection, scheduler, 1)
+        described_class.new(connection, double('logger').as_null_object, scheduler, 1)
       end
 
       let :connection do
@@ -171,7 +171,7 @@ module Cassandra
 
         context 'when a compressor is specified' do
           let :protocol_handler do
-            described_class.new(connection, scheduler, 1, compressor)
+            described_class.new(connection, double('logger').as_null_object, scheduler, 1, compressor)
           end
 
           let :compressor do
@@ -211,7 +211,7 @@ module Cassandra
 
         context 'when a protocol version is specified' do
           let :protocol_handler do
-            described_class.new(connection, scheduler, 7)
+            described_class.new(connection, double('logger').as_null_object, scheduler, 7)
           end
 
           it 'sets the protocol version in the header' do
