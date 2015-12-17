@@ -169,15 +169,17 @@ module Cassandra
 
           value
         when :udt
-          return nil unless read_size(buffer)
+          size = read_size(buffer)
+          return nil unless size
 
+          length   = buffer.length
           keyspace = type.keyspace
           name     = type.name
           fields   = type.fields
           values   = ::Hash.new
 
           fields.each do |field|
-            if buffer.empty?
+            if length - buffer.length >= size
               values[field.name] = nil
             else
               values[field.name] = read_value_v3(buffer, field.type)
